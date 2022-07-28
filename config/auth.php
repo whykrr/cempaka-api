@@ -40,6 +40,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'api_client' => [
+            'driver' => 'jwt',
+            'provider' => 'client',
+        ],
         // 'web' => [
         //     'driver' => 'session',
         //     'provider' => 'users',
@@ -69,6 +73,11 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        'client' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Client::class,
+        ],
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -93,6 +102,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'client' => [
+            'provider' => 'client',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
