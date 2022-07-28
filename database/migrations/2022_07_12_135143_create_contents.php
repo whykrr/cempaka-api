@@ -14,8 +14,22 @@ class CreateContents extends Migration
     public function up()
     {
         Schema::create('contents', function (Blueprint $table) {
-            $table->id();
+            $table->id()->unsigned();
+            $table->integer('category_id')->unsigned();
+            $table->string('title', 150);
+            $table->string('slug', 150);
+            $table->text('content')->nullable();
+            $table->text('image')->nullable();
+            $table->text('tags')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
+
+            // create index id
+            $table->index('id');
+            $table->index('slug');
+            $table->index('category_id');
+            // create fulltext
+            $table->fullText(['title', 'content', 'tags']);
         });
     }
 
