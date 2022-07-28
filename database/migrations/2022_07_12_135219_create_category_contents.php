@@ -19,6 +19,7 @@ class CreateCategoryContents extends Migration
             $table->string('slug', 150);
             $table->text('description')->nullable();
             $table->text('image')->nullable();
+            $table->text('icon')->nullable();
             $table->text('component')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('is_display')->default(0);
