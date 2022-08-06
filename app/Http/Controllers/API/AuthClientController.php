@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\User;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-class AuthController extends Controller
+class AuthClientController extends Controller
 {
     public $token = true;
 
@@ -20,7 +21,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        // $this->middleware('auth:api_client', ['except' => ['login', 'register']]);
     }
 
     public function register(Request $request)
@@ -42,20 +43,16 @@ class AuthController extends Controller
         }
 
 
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
-
-        if ($this->token) {
-            return $this->login($request);
-        }
+        $client = new Client();
+        $client->name = $request->name;
+        $client->email = $request->email;
+        $client->password = bcrypt($request->password);
+        $client->save();
 
         return response()->json([
-            'success' => true,
-            'data' => $user
-        ], Response::HTTP_OK);
+            'message' => true,
+            'data' => $client
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -68,7 +65,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         try {
-            if (!$token = auth()->attempt($credentials)) {
+            if (!$token = auth('api_client')->attempt($credentials)) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
         } catch (JWTException $e) {
@@ -85,7 +82,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(auth('api_client')->user());
     }
 
     /**
@@ -107,7 +104,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth('api_client')->refresh());
     }
 
     /**
@@ -122,7 +119,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api_client')->factory()->getTTL() * 60
         ]);
     }
 }

@@ -3,11 +3,17 @@
 namespace App\Exceptions;
 
 use Throwable;
+use App\Constant\RespondMessage;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -47,6 +53,38 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (JWTException $e, $request) {
             return Response::json(['error' => 'Token not parsed'], 401);
+        });
+
+        // error not found
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                if ($e->getPrevious() instanceof ModelNotFoundException) {
+                    return response()->json([
+                        'message' => RespondMessage::ERROR_NOT_FOUND,
+                    ], JsonResponse::HTTP_NOT_FOUND);
+                }
+                return response()->json([
+                    'status' => 404,
+                    'message' => RespondMessage::ERROR_TARGET_NOT_FOUND,
+                ], 404);
+            }
+        });
+
+        // set globaly error query exeption
+        $this->renderable(function (QueryException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
+        });
+
+        // set globaly error validation
+        $this->renderable(function (ValidationException $e, $request) {
+            return response()->json([
+                'message' => RespondMessage::ERROR_VALIDATION,
+                'validation_error' => $e->validator->errors(),
+            ], 400);
         });
     }
 }
