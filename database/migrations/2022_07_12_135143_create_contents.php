@@ -21,7 +21,7 @@ class CreateContents extends Migration
             $table->text('content')->nullable();
             $table->text('image')->nullable();
             $table->text('tags')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->boolean('status')->default(true);
             $table->timestamps();
 
             // create index id

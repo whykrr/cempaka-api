@@ -20,7 +20,7 @@ class CreateTemplates extends Migration
             $table->boolean('is_repeatable')->default(false);
             $table->string('name', 150);
             $table->longText('template');
-            $table->tinyInteger('status')->default(1);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             // index

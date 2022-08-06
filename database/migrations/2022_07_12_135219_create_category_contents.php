@@ -16,13 +16,13 @@ class CreateCategoryContents extends Migration
         Schema::create('content_categories', function (Blueprint $table) {
             $table->id()->unsigned();
             $table->string('name', 150);
-            $table->string('slug', 150);
+            $table->string('slug', 150)->unique();
             $table->text('description')->nullable();
             $table->text('image')->nullable();
             $table->text('icon')->nullable();
             $table->text('component')->nullable();
-            $table->tinyInteger('status')->default(1);
-            $table->tinyInteger('is_display')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_display')->default(0);
             $table->timestamps();
             // create index id
             $table->index('id');
