@@ -40,28 +40,28 @@ Route::group([
 
 
 Route::group([
-    'middleware' => 'auth.jwt'
+    // 'middleware' => 'auth.jwt'
 ], function ($router) {
     Route::post('auth_client/register', [AuthClientController::class, 'register']);
 
     Route::group([
         'prefix' => 'content'
     ], function ($router) {
-        Route::get('/', [ContentController::class, 'index']);
-        Route::get('/{id}', [ContentController::class, 'show']);
+        Route::get('/', [ContentController::class, 'get']);
+        Route::get('/{id}', [ContentController::class, 'detail'])->whereNumber('id');
         Route::post('/', [ContentController::class, 'store']);
-        Route::put('/{id}', [ContentController::class, 'update']);
-        Route::delete('/{id}', [ContentController::class, 'delete']);
+        Route::put('/{id}', [ContentController::class, 'update'])->whereNumber('id');
+        Route::delete('/{id}', [ContentController::class, 'delete'])->whereNumber('id');
 
         // categories
         Route::group([
             'prefix' => 'categories'
         ], function ($router) {
             Route::get('/', [ContentCategoryController::class, 'get']);
-            Route::get('/{id}', [ContentCategoryController::class, 'detail']);
+            Route::get('/{id}', [ContentCategoryController::class, 'detail'])->whereNumber('id');
             Route::post('/', [ContentCategoryController::class, 'store']);
-            Route::put('/{id}', [ContentCategoryController::class, 'update']);
-            Route::delete('/{id}', [ContentCategoryController::class, 'delete']);
+            Route::put('/{id}', [ContentCategoryController::class, 'update'])->whereNumber('id');
+            Route::delete('/{id}', [ContentCategoryController::class, 'delete'])->whereNumber('id');
         });
     });
 });
