@@ -15,7 +15,6 @@ class ContentCategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function get()
     {
@@ -54,13 +53,7 @@ class ContentCategoryController extends Controller
      */
     public function detail($id)
     {
-        // try {
         $content_category = ContentCategory::findOrFail($id);
-        //     return new RespondWithMeta($content_category);
-        // } catch (\Exception $e) {
-        //     return $e;
-        // }
-
         return response()->json([
             'message' => RespondMessage::SUCCESS_RETRIEVE,
             'data' => $content_category
@@ -79,34 +72,10 @@ class ContentCategoryController extends Controller
         $data = $request->json()->all();
 
         // create new content category
-        $content_category = new ContentCategory();
-        $content_category->name = $data['name'];
+        $content_category = new ContentCategory($data);
 
-        // get slug
-        $content_category->slug = Slugify::create()->slugify($data['name']);
-
-        $content_category->description = $data['description'];
-        $content_category->image = $data['image'];
-        $content_category->icon = $data['icon'];
-
-        // check component is object or not
-        if (isset($data['component']) && is_array($data['component'])) {
-            $content_category->component = json_encode($data['component']);
-        } else {
-            $content_category->component = null;
-        }
-
-        $content_category->is_active = $data['is_active'];
-        $content_category->is_display = $data['is_display'];
-
-        // save content category
+        //save data
         $content_category->save();
-
-        // check object component is empty or not
-        if (isset($data['component']) && is_array($data['component'])) {
-            // get component
-            $content_category->component = $data['component'];
-        }
 
         // return response
         return response()->json([
@@ -132,29 +101,15 @@ class ContentCategoryController extends Controller
         // update content category
         $contentCategory->name = $data['name'];
         $contentCategory->name = $data['name'];
-        $contentCategory->slug = Slugify::create()->slugify($data['name']);
         $contentCategory->description = $data['description'];
         $contentCategory->image = $data['image'];
         $contentCategory->icon = $data['icon'];
-
-        // check component is object or not
-        if (isset($data['component']) && is_array($data['component'])) {
-            $contentCategory->component = json_encode($data['component']);
-        } else {
-            $contentCategory->component = null;
-        }
-
+        $contentCategory->component = $data['component'];
         $contentCategory->is_active = $data['is_active'];
         $contentCategory->is_display = $data['is_display'];
 
         // save content category
         $contentCategory->save();
-
-        // check object component is empty or not
-        if (isset($data['component']) && is_array($data['component'])) {
-            // get component
-            $contentCategory->component = $data['component'];
-        }
 
         // return response
         return response()->json([

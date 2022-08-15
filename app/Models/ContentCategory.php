@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Casts\Json;
+use Cocur\Slugify\Slugify;
 use Illuminate\Database\Eloquent\Model;
-
-use function PHPUnit\Framework\isNull;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ContentCategory extends Model
 {
@@ -30,21 +30,19 @@ class ContentCategory extends Model
         'is_display',
     ];
 
-    /**
-     * The storage format of the model's date columns.
-     *
-     * @var string
-     */
-    // protected $dateFormat = 'U';
+    // casting attribute
+    protected $casts = [
+        'is_active' => 'boolean',
+        'is_display' => 'boolean',
+        'component' => Json::class
+    ];
 
-
-    /**
-     * set return component
-     */
-    public function getComponentAttribute()
+    // METHOD SETTER
+    // set name
+    public function setNameAttribute($value)
     {
-        if (!empty($this->attributes['component'])) {
-            return json_decode($this->attributes['component'], true);
-        }
+        $slugify = new Slugify();
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = $slugify->slugify($value);
     }
 }

@@ -73,8 +73,17 @@ class Handler extends ExceptionHandler
         // set globaly error query exeption
         $this->renderable(function (QueryException $e, $request) {
             if ($request->is('api/*')) {
+                // get env value
+                $env = env('APP_ENV');
+
+                if ($env == 'local') {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                    ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+                }
+
                 return response()->json([
-                    'message' => $e->getMessage(),
+                    'message' => 'Something went wrong',
                 ], 500);
             }
         });
