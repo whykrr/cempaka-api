@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['error' => $validator->errors()], 401);
+            return response()->json(['message' => $validator->errors()], 401);
         }
 
 
@@ -70,10 +70,10 @@ class AuthController extends Controller
 
         try {
             if (!$token = auth()->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'Login Fail, please check your cridential!'], 401);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return response()->json(['message' => 'Could not create token'], 500);
         }
 
         return $this->respondWithToken($token);
@@ -121,7 +121,12 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         return response()->json([
+            'message' => 'Login Success!',
             'access_token' => $token,
+            'user' => [
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+            ],
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
