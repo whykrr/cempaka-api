@@ -68,11 +68,8 @@ class Client extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'client' => [
-                'id' => $this->id,
-                'name' => $this->name,
-                'email' => $this->email,
-            ],
+            'id' => $this->id,
+            'level' => 'client',
         ];
     }
 }
