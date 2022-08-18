@@ -41,7 +41,7 @@ class ContentCategoryController extends Controller
         }
 
         // get content categories
-        $content_categories = $content_categories->paginate($perpage);
+        $content_categories = $content_categories->orderBy('created_at', 'desc')->paginate($perpage);
 
         return new RespondWithMeta($content_categories);
     }

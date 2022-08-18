@@ -25,7 +25,7 @@ class ContentController extends Controller
 
         // get content with category
         $contents = Content::select(['id', 'category_id', 'title', 'slug', 'tags', 'is_active']);
-        $contents = $contents->paginate($perpage);
+        $contents = $contents->orderBy('created_at', 'desc')->paginate($perpage);
 
         return new RespondWithMeta($contents);
     }
