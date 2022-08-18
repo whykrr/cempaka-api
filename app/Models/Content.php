@@ -52,6 +52,10 @@ class Content extends Model
     // get category name
     public function getCategoryContentAttribute()
     {
+        // check if category_id is null
+        if ($this->category_id == null) {
+            return null;
+        }
         return [
             'id' => $this->category->id,
             'name' => $this->category->name,

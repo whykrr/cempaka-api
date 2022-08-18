@@ -32,7 +32,7 @@ class ProjectController extends Controller
             $projects = $projects->where('client_id', $client_id);
         }
         if (!is_null($is_sort_name)) {
-            $projects = $projects->orderBy('name', $is_sort_name);
+            $projects = $projects->orderBy('name', 'asc');
         } else {
             $projects = $projects->orderBy('created_at', 'desc');
         }

@@ -6,6 +6,7 @@ use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\AuthClientController;
 use App\Http\Controllers\API\ContentCategoryController;
+use App\Http\Controllers\API\DisplayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,13 @@ use App\Http\Controllers\API\ContentCategoryController;
 // healtcheck
 Route::get('/', function () {
     return response()->json(['message' => 'Welcome to API CMS']);
+});
+
+// OPEN API
+Route::group(['prefix' => 'display'], function () {
+    Route::get('/menubar', [DisplayController::class, 'menubar']);
+    // route get content with slig
+    Route::get('/content/{slug_category}', [DisplayController::class, 'content']);
 });
 
 // Auth
