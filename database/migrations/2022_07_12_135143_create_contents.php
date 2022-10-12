@@ -22,12 +22,14 @@ class CreateContents extends Migration
             $table->text('image')->nullable();
             $table->text('tags')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->integer('created_by')->unsigned();
             $table->timestamps();
 
             // create index id
             $table->index('id');
             $table->index('slug');
             $table->index('category_id');
+            $table->index('created_by');
             // create fulltext
             $table->fullText(['title', 'content', 'tags']);
         });

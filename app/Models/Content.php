@@ -24,6 +24,7 @@ class Content extends Model
         'image',
         'tags',
         'is_active',
+        'created_by',
     ];
     protected $with = ['category'];
     protected $appends = ['category_content'];
@@ -35,7 +36,8 @@ class Content extends Model
         'image',
         'tags',
         'is_active',
-        'category_content'
+        'category_content',
+        'creator',
     ];
     protected $casts = [
         'is_active' => 'boolean',
@@ -46,6 +48,10 @@ class Content extends Model
     public function category()
     {
         return $this->belongsTo(ContentCategory::class, 'category_id');
+    }
+    public function created_user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     // GETTER METHOD
@@ -61,6 +67,18 @@ class Content extends Model
             'name' => $this->category->name,
         ];
     }
+
+    // get creator
+    public function getCreatorAttribute()
+    {
+        // check if created_by is null
+        if ($this->created_by == null) {
+            return null;
+        }
+        return $this->created_user->name;
+    }
+
+
 
     // SETTER METHOD
     // set slug

@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Constant\RespondMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User as RequestsUser;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\RespondWithMeta;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -21,7 +24,56 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        // $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+    // get all user
+    public function get()
+    {
+        // get request
+        $param = request()->query();
+        $perpage = $param['perpage'] ?? 10;
+
+        $users = User::select(['id', 'name', 'email', 'level'])->where('level', '!=', 'superadmin')->paginate($perpage);
+        return new RespondWithMeta($users);
+    }
+
+    // get detail user
+    public function detail($id)
+    {
+        $client = User::findOrFail($id);
+        return response()->json([
+            'message' => RespondMessage::SUCCESS_RETRIEVE,
+            'data' => $client,
+        ]);
+    }
+
+    // update user
+    public function update(RequestsUser $request, $id)
+    {
+        // get data from json
+        $payload = $request->json()->all();
+
+        // instanceof content
+        $user = User::findOrFail($id);
+
+        // save data
+        $user->update($payload);
+        return response()->json([
+            'message' => RespondMessage::SUCCESS_UPDATE,
+            'data' => $user,
+        ]);
+    }
+
+    // delete user
+    public function delete($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return response()->json([
+            'message' => RespondMessage::SUCCESS_DELETE,
+            'data' => $user,
+        ]);
     }
 
     public function register(Request $request)
@@ -46,6 +98,7 @@ class AuthController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->level = $request->level;
         $user->password = bcrypt($request->password);
         $user->save();
 
@@ -128,7 +181,7 @@ class AuthController extends Controller
                 'email' => auth()->user()->email,
             ],
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 1440
         ]);
     }
 }

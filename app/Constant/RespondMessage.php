@@ -13,6 +13,7 @@ class RespondMessage
     public const SUCCESS_CREATE = 'Data successfully created';
     public const SUCCESS_UPDATE = 'Data successfully updated';
     public const SUCCESS_DELETE = 'Data successfully deleted';
+    public const SUCCESS_UPLOAD = 'File successfully uploaded';
 
     // Error Respond
     public const ERROR_RETRIEVE = 'Data not retrieved';

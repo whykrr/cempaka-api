@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use Ramsey\Uuid\Uuid;
 use App\Models\Content;
 use Cocur\Slugify\Slugify;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Constant\RespondMessage;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 use App\Http\Resources\RespondWithMeta;
 use App\Http\Requests\Content as RequestsContent;
 
@@ -107,6 +110,37 @@ class ContentController extends Controller
         return response()->json([
             'message' => RespondMessage::SUCCESS_DELETE,
             'data' => $content
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Post upload image.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadImage(Request $request)
+    {
+        $uploaded = $request->file('image');
+        $uuid = Uuid::uuid4();
+
+        // get file name
+        $filename = 'c-' . $uuid->toString() . '.' . $uploaded->getClientOriginalExtension();
+
+        // save to storage
+        // $uploaded->storeAs('/images', $filename, 'public');
+
+        Image::make($uploaded)
+            ->resize(750, 750, function ($constraint) {
+                $constraint->aspectRatio();
+            })
+            ->save(storage_path('app/images/' . $filename), 75);
+
+        return response()->json([
+            'message' => RespondMessage::SUCCESS_UPLOAD,
+            'data' => [
+                'filename' => $filename,
+                'url' => asset('images/original/' . $filename)
+            ]
         ], Response::HTTP_OK);
     }
 }

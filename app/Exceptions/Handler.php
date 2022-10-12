@@ -45,19 +45,28 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->renderable(function (TokenInvalidException $e, $request) {
-            return Response::json(['error' => 'Invalid token'], 401);
+            return Response::json([
+                'code' => 'AUTH-TIN',
+                'message' => 'Invalid token'
+            ], 401);
         });
         $this->renderable(function (TokenExpiredException $e, $request) {
-            return Response::json(['error' => 'Token has Expired'], 401);
+            return Response::json([
+                'code' => 'AUTH-TEX',
+                'message' => 'Token has Expired'
+            ], 401);
         });
 
         $this->renderable(function (JWTException $e, $request) {
-            return Response::json(['error' => 'Token not parsed'], 401);
+            return Response::json([
+                'code' => 'AUTH-TNP',
+                'message' => 'Token not parsed'
+            ], 401);
         });
 
         // error not found
         $this->renderable(function (NotFoundHttpException $e, $request) {
-            if ($request->is('api/*')) {
+            if ($request->is('*')) {
                 if ($e->getPrevious() instanceof ModelNotFoundException) {
                     return response()->json([
                         'message' => RespondMessage::ERROR_NOT_FOUND,
@@ -72,7 +81,7 @@ class Handler extends ExceptionHandler
 
         // set globaly error query exeption
         $this->renderable(function (QueryException $e, $request) {
-            if ($request->is('api/*')) {
+            if ($request->is('*')) {
                 // get env value
                 $env = env('APP_ENV');
 

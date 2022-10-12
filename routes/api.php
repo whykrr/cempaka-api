@@ -59,6 +59,25 @@ Route::group([
 ], function ($router) {
     Route::post('auth_client/register', [AuthClientController::class, 'register']);
 
+    Route::group([
+        'prefix' => 'users'
+    ], function ($router) {
+        Route::get('/', [AuthController::class, 'get']);
+        Route::get('/{id}', [AuthController::class, 'detail'])->whereNumber('id');
+        Route::put('/{id}', [AuthController::class, 'update'])->whereNumber('id');
+        Route::delete('/{id}', [AuthController::class, 'delete'])->whereNumber('id');
+    });
+
+    Route::group([
+        'prefix' => 'clients'
+    ], function ($router) {
+        Route::get('/', [AuthClientController::class, 'get']);
+        Route::get('/{id}', [AuthClientController::class, 'detail'])->whereNumber('id');
+        Route::put('/{id}', [AuthClientController::class, 'update'])->whereNumber('id');
+        Route::delete('/{id}', [AuthClientController::class, 'delete'])->whereNumber('id');
+    });
+
+
     // Content
     Route::group([
         'prefix' => 'contents'
@@ -68,6 +87,7 @@ Route::group([
         Route::post('/', [ContentController::class, 'store']);
         Route::put('/{id}', [ContentController::class, 'update'])->whereNumber('id');
         Route::delete('/{id}', [ContentController::class, 'delete'])->whereNumber('id');
+        Route::post('/upload/image', [ContentController::class, 'uploadImage']);
 
         // categories
         Route::group([

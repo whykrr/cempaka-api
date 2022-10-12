@@ -24,7 +24,7 @@ class ContentCategoryController extends Controller
         $perpage = $param['perpage'] ?? 10;
 
         // custom select
-        $content_categories = ContentCategory::select(['id', 'name', 'slug', 'description', 'is_active']);
+        $content_categories = ContentCategory::select(['id', 'name', 'slug', 'description', 'icon', 'is_active']);
 
         // check if query params is_display is not empty
         if (isset($param['is_display'])) {
