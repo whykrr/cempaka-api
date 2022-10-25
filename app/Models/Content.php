@@ -38,6 +38,7 @@ class Content extends Model
         'is_active',
         'category_content',
         'creator',
+        'created_at',
     ];
     protected $casts = [
         'is_active' => 'boolean',
