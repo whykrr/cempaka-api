@@ -34,6 +34,13 @@ class DisplayController extends Controller
     public function content($slug_category)
     {
         $category = ContentCategory::select('id')->where('slug', $slug_category)->first();
+        if (!empty($category)) {
+            return response()->json([
+                'message' => RespondMessage::SUCCESS_RETRIEVE,
+                'data' => []
+            ], Response::HTTP_OK);
+        }
+
         $content = Content::select(['id', 'title', 'slug', 'content', 'tags'])->where('category_id', $category->id)->get();
         $content->makeHidden(['category_content']);
 
