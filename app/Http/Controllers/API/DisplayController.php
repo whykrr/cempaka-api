@@ -41,7 +41,7 @@ class DisplayController extends Controller
             ], Response::HTTP_OK);
         }
 
-        $content = Content::select(['id', 'title', 'slug', 'content', 'tags'])->where('category_id', $category->id)->get();
+        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags'])->where('category_id', $category->id)->get();
         $content->makeHidden(['category_content']);
 
         return response()->json([
