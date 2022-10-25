@@ -41,7 +41,7 @@ class DisplayController extends Controller
             ], Response::HTTP_OK);
         }
 
-        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags'])->where('category_id', $category->id)->get();
+        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags', 'created_at'])->where('category_id', $category->id)->get();
         $content->makeHidden(['category_content']);
 
         return response()->json([
@@ -58,7 +58,7 @@ class DisplayController extends Controller
      */
     public function content($slug)
     {
-        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags'])->where('slug', $slug)->first();
+        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags', 'created_at'])->where('slug', $slug)->first();
         if (empty($content)) {
             return response()->json([
                 'message' => RespondMessage::ERROR_NOT_FOUND,
