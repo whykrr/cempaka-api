@@ -31,7 +31,7 @@ class DisplayController extends Controller
      * @param string $slug
      * @return \Illuminate\Http\Response
      */
-    public function content($slug_category)
+    public function content_category($slug_category)
     {
         $category = ContentCategory::select('id')->where('slug', $slug_category)->first();
         if (empty($category)) {
@@ -56,9 +56,9 @@ class DisplayController extends Controller
      * @param string $slug
      * @return \Illuminate\Http\Response
      */
-    public function content_id($id)
+    public function content($slug)
     {
-        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags'])->where('id', $id)->first();
+        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags'])->where('slug', $slug)->first();
         if (empty($content)) {
             return response()->json([
                 'message' => RespondMessage::ERROR_NOT_FOUND,
