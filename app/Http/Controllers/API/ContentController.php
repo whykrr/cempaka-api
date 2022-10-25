@@ -61,6 +61,7 @@ class ContentController extends Controller
 
         // instanceof content
         $content = new Content($data);
+        $content->created_by = auth()->user()->id;
 
         // save data
         $content->save();
