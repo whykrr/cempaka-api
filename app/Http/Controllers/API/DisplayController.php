@@ -34,9 +34,9 @@ class DisplayController extends Controller
     public function content($slug_category)
     {
         $category = ContentCategory::select('id')->where('slug', $slug_category)->first();
-        if (!empty($category)) {
+        if (empty($category)) {
             return response()->json([
-                'message' => RespondMessage::SUCCESS_RETRIEVE,
+                'message' => RespondMessage::ERROR_NOT_FOUND,
                 'data' => []
             ], Response::HTTP_OK);
         }
