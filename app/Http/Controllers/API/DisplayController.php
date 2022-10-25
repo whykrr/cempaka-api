@@ -49,4 +49,28 @@ class DisplayController extends Controller
             'data' => $content
         ], Response::HTTP_OK);
     }
+
+    /**
+     * Display the content with id.
+     *
+     * @param string $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function content_id($id)
+    {
+        $content = Content::select(['id', 'title', 'slug', 'content', 'image', 'tags'])->where('id', $id)->first();
+        if (empty($content)) {
+            return response()->json([
+                'message' => RespondMessage::ERROR_NOT_FOUND,
+                'data' => []
+            ], Response::HTTP_OK);
+        }
+
+        $content->makeHidden(['category_content']);
+
+        return response()->json([
+            'message' => RespondMessage::SUCCESS_RETRIEVE,
+            'data' => $content
+        ], Response::HTTP_OK);
+    }
 }

@@ -28,6 +28,7 @@ Route::group(['prefix' => 'display'], function () {
     Route::get('/menubar', [DisplayController::class, 'menubar']);
     // route get content with slig
     Route::get('/content/{slug_category}', [DisplayController::class, 'content']);
+    Route::get('/content/id/{id}', [DisplayController::class, 'content_id'])->whereNumber('id');
 });
 
 // Auth
