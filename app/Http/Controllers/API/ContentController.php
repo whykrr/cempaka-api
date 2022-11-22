@@ -122,6 +122,9 @@ class ContentController extends Controller
     public function uploadImage(Request $request)
     {
         $uploaded = $request->file('image');
+        $quality = $request->post('quality') ?? 75;
+        $width = $request->post('width') ?? 750;
+        $height = $request->post('height') ?? 750;
         $uuid = Uuid::uuid4();
 
         // get file name
@@ -131,10 +134,10 @@ class ContentController extends Controller
         // $uploaded->storeAs('/images', $filename, 'public');
 
         Image::make($uploaded)
-            ->resize(750, 750, function ($constraint) {
+            ->resize($width, $height, function ($constraint) {
                 $constraint->aspectRatio();
             })
-            ->save(storage_path('app/images/' . $filename), 75);
+            ->save(storage_path('app/images/' . $filename), $quality);
 
         return response()->json([
             'message' => RespondMessage::SUCCESS_UPLOAD,
