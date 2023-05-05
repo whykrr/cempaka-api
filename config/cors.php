@@ -17,7 +17,7 @@ return [
 
     'paths' => ['*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['POST', 'GET', 'PUT', 'DELETE', 'OPTION'],
 
     'allowed_origins' => ['*'],
 
@@ -25,7 +25,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['Authorization'],
 
     'max_age' => 86400000,
 
